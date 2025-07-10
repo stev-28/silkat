@@ -28,3 +28,5 @@ Route::get('/sop', [SopController::class, 'index']);
 Route::get('/galeri-tes', function() {
     return ['ok' => true];
 });
+Route::get('/berita-dlhp', [\App\Http\Controllers\BeritaProxyController::class, 'fetchBerita']);
+Route::get('/berita-content', [\App\Http\Controllers\BeritaContentController::class, 'getContent']);

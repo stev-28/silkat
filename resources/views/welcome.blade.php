@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Phosphor Icons for rich icons (e.g., document, question, chat) -->
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/phosphor.js"></script>
+    <!-- Debug script untuk modal berita -->
+    <script src="/js/berita-debug.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -221,6 +223,136 @@
         .animate-fadein-up {
             animation: fadein-up 0.7s cubic-bezier(0.4,0,0.2,1);
         }
+        /* Gaya daftar SOP mobile */
+        #sop-list-mobile .sop-mobile-item {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #166534;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.06);
+            transition: background 0.2s, border 0.2s, color 0.2s, font-weight 0.2s;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        #sop-list-mobile .sop-mobile-item:hover {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        #sop-list-mobile .sop-mobile-item.active {
+            background: #bbf7d0;
+            border-color: #10b981;
+            color: #065f46;
+            font-weight: 700;
+        }
+        @media (max-width: 480px) {
+            #sop-list-mobile .sop-mobile-item {
+                font-size: 0.95rem;
+                padding: 0.7rem 0.7rem;
+            }
+        }
+        /* Gaya daftar SOP desktop/sidebar */
+        .sop-list li.active {
+            background: #bbf7d0;
+            border-left: 4px solid #10b981;
+            font-weight: 700;
+            color: #065f46;
+            transition: background 0.2s, border 0.2s, color 0.2s, font-weight 0.2s;
+        }
+        .sop-list li {
+            transition: background 0.2s, border 0.2s, color 0.2s, font-weight 0.2s;
+        }
+        @media (max-width: 768px) {
+            .sop-list li.active {
+                border-left-width: 3px;
+                font-size: 0.98rem;
+            }
+        }
+        /* Cardview berita */
+        .berita-card {
+            background: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.08);
+            border: 1px solid #d1fae5;
+            padding: 1.25rem 1rem;
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.25s, transform 0.25s, filter 0.25s, background 0.2s;
+            animation: berita-fadein 0.7s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+        }
+        .berita-card:hover {
+            box-shadow: 0 8px 32px rgba(16,185,129,0.18), 0 2px 8px rgba(0,0,0,0.10);
+            transform: scale(1.03) translateY(-4px);
+            filter: brightness(1.04);
+            background: #f0fdf4;
+            z-index: 2;
+        }
+        @keyframes berita-fadein {
+            0% { opacity: 0; transform: translateY(24px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .berita-pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        .berita-pagination button {
+            background: #fff;
+            border: 1px solid #10b981;
+            color: #10b981;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1.1rem;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+        .berita-pagination button.active, .berita-pagination button:hover {
+            background: #10b981;
+            color: #fff;
+        }
+        @media (max-width: 600px) {
+            .berita-card { padding: 1rem 0.7rem; }
+            .berita-pagination button { padding: 0.45rem 0.8rem; font-size: 0.98rem; }
+        }
+        
+        /* Berita detail modal styles */
+        .berita-detail {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+        .berita-detail::-webkit-scrollbar {
+            width: 6px;
+        }
+        .berita-detail::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .berita-detail::-webkit-scrollbar-thumb {
+            background: #10B981;
+            border-radius: 3px;
+        }
+        .berita-detail::-webkit-scrollbar-thumb:hover {
+            background: #059669;
+        }
+        .berita-detail .prose {
+            line-height: 1.6;
+            color: #374151;
+        }
+        .berita-detail .prose p {
+            margin-bottom: 1rem;
+        }
+        .berita-detail .prose h1, .berita-detail .prose h2, .berita-detail .prose h3 {
+            color: #065f46;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
@@ -273,6 +405,12 @@
                     <i class="ph ph-image-square text-4xl mb-2"></i>
                     <span class="text-sm font-medium">Galeri</span>
                 </button>
+
+                <!-- Tambahkan tombol navigasi Berita -->
+                <button id="nav-berita" class="nav-card bg-gradient-to-br from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white p-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out flex flex-col items-center justify-center">
+                    <i class="ph ph-newspaper text-4xl mb-2"></i>
+                    <span class="text-sm font-medium">Berita</span>
+                </button>
             </nav>
         </div>
 
@@ -316,6 +454,7 @@
                                 <option value="laboratorium-lingkungan">Laboratorium Lingkungan Hidup</option>
                                 <option value="umum-bidang">Umum</option>
                             </select>
+                            <div id="sop-list-mobile" class="block md:hidden mt-2"></div>
 
                             <!-- Desktop/Tablet view of categories -->
                             <div class="hidden md:block">
@@ -525,6 +664,23 @@
                 <div class="bg-white p-4 rounded-lg shadow-sm">
                     <div id="gallery-images" class="gallery-grid"></div>
                     <div id="gallery-status-message" class="text-center text-gray-600 mb-4"></div>
+                </div>
+            </div>
+
+            <!-- Section Berita -->
+            <div id="berita-content" class="main-content-panel h-[calc(100%-4rem)] overflow-y-auto hidden p-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Berita DLHP Papua Barat</h3>
+                <div id="berita-list" class="space-y-4"></div>
+                <div id="berita-pagination" class="berita-pagination"></div>
+            </div>
+
+            <!-- Modal Berita -->
+            <div id="berita-modal" class="modal-overlay hidden">
+                <div class="modal-content max-w-4xl w-full mx-4">
+                    <button class="modal-close-button" onclick="closeBeritaModal()">&times;</button>
+                    <div id="berita-modal-content" class="w-full">
+                        <!-- Content will be loaded here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -944,6 +1100,7 @@
             const sopWhatsappBtn = document.getElementById('sop-whatsapp-btn'); // WhatsApp button for SOP detail
             const sopUnitSelectMobile = document.getElementById('sop-unit-select');
 
+            
             // --- WhatsApp Numbers and Contact Persons for each Bidang ---
             const bidangContacts = {
                 "bidang-pertanahan": {
@@ -1158,17 +1315,88 @@
             // Handle mobile unit selection for SOPs
             sopUnitSelectMobile.addEventListener('change', function() {
                 const selectedCategory = this.value;
-                sopLists.forEach(item => {
-                    const itemCategory = item.closest('.sop-list').dataset.category;
-                    if (selectedCategory === 'all' || itemCategory === selectedCategory) {
-                        item.style.display = 'flex'; // Show
-                    } else {
-                        item.style.display = 'none'; // Hide
+                // Sembunyikan semua daftar SOP
+                document.querySelectorAll('.sop-list').forEach(list => list.style.display = 'none');
+                // Reset highlight pada kategori desktop
+                sopCategories.forEach(cat => cat.classList.remove('bg-green-100', 'font-bold'));
+
+                // Tampilkan daftar SOP sesuai bidang yang dipilih
+                if (selectedCategory !== 'all') {
+                    const list = document.querySelector(`.sop-list[data-category="${selectedCategory}"]`);
+                    if (list) list.style.display = 'block';
+                }
+
+                // Tampilkan rangkuman dan narahubung seperti di desktop
+                if (bidangSummaries[selectedCategory]) {
+                    const contact = bidangContacts[selectedCategory];
+                    let contactHtml = '';
+                    if (contact) {
+                        const whatsappLink = `https://wa.me/${contact.number}?text=Halo%20${encodeURIComponent(contact.contactPerson)}%20dari%20${encodeURIComponent(contact.name)}%2C%20saya%20ingin%20bertanya...`;
+                        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+                        contactHtml = `
+                            <div class="bg-white rounded-lg shadow-sm p-4 mt-4">
+                                <div class="mb-2">
+                                    <span class="block text-base font-semibold text-green-800">${contact.contactPerson}</span>
+                                    <span class="block text-xs text-gray-700 mb-1">${contact.role} - ${contact.name}</span>
+                                </div>
+                                <a href="${whatsappLink}" target="_blank"
+                                   class="inline-flex items-center px-4 py-2 mt-1 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200">
+                                    <i class="ph ph-whatsapp-logo text-lg mr-2"></i>Hubungi via WhatsApp
+                                </a>
+                                <div class="flex flex-col items-center mt-3">
+                                    <p class="text-xs text-gray-600 mb-1">Scan QR code ini untuk terhubung di WA</p>
+                                    <img src="${qrCodeUrl}" alt="WhatsApp QR Code" class="w-24 h-24 border border-gray-300 rounded-lg p-1">
+                                </div>
+                            </div>
+                        `;
                     }
-                });
-                 // Hide desktop categories if mobile select is used
-                document.querySelectorAll('.sop-category').forEach(cat => cat.style.display = 'none');
-                document.querySelectorAll('.sop-list').forEach(list => list.style.display = 'block'); // Ensure the lists themselves are visible
+                    sopDetailContent.innerHTML = `
+                        <div class="bg-green-50 border border-green-300 rounded-lg p-5 animate-fadein-up mt-0 mb-2">
+                            <h4 class="text-xl font-bold text-green-800 mb-1">Selamat Datang di ${contact ? contact.name : ''},</h4>
+                            <p class="text-green-700 text-sm mb-3">${bidangSummaries[selectedCategory]}</p>
+                            ${contactHtml}
+                        </div>
+                    `;
+                    sopActions.classList.add('hidden');
+                    sopWhatsappAction.classList.add('hidden');
+                } else {
+                    sopDetailContent.innerHTML = '<p class="text-center text-gray-500">Pilih bidang di samping untuk melihat rangkuman dan SOP.</p>';
+                }
+
+                // Tampilkan daftar SOP di bawah dropdown (khusus mobile)
+                const sopListMobile = document.getElementById('sop-list-mobile');
+                sopListMobile.innerHTML = '';
+                if (selectedCategory !== 'all') {
+                    // Temukan semua SOP yang bidang_id-nya sesuai
+                    const bidangMap = {
+                        'bidang-pertanahan': 1,
+                        'bidang-persampahan': 2,
+                        'bidang-penataan-penegakan': 3,
+                        'bidang-pengendalian-pencemaran': 4,
+                        'laboratorium-lingkungan': 5,
+                        'umum-bidang': 6
+                    };
+                    const bidangId = bidangMap[selectedCategory];
+                    const sopItems = Object.entries(sops).filter(([key, sop]) => sop.bidang_id == bidangId);
+
+                    if (sopItems.length > 0) {
+                        sopListMobile.innerHTML = sopItems.map(([key, sop]) =>
+                            `<div class="sop-mobile-item" data-sop-id="${key}">
+                                <i class=\"ph ph-file-text text-base mr-2\"></i>${sop.title}
+                            </div>`
+                        ).join('');
+                        // Pasang event click
+                        sopListMobile.querySelectorAll('[data-sop-id]').forEach(item => {
+                            item.addEventListener('click', function() {
+                                // Hapus highlight dari semua
+                                sopListMobile.querySelectorAll('.sop-mobile-item').forEach(i => i.classList.remove('active'));
+                                // Highlight yang diklik
+                                this.classList.add('active');
+                                showSopDetail(this.dataset.sopId);
+                            });
+                        });
+                    }
+                }
             });
 
             // SOP Search functionality
@@ -1219,7 +1447,90 @@
 
             // Initial state: ensure SOP tab is active and visible
             showContentPanel('sop-content'); // Changed to use new showContentPanel function
+
+            // Variables for berita functionality
+            window.beritaData = [];
+            let beritaPage = 1;
+            const beritaPerPage = 4;
+
+            // Tambahkan event listener untuk tombol Berita
+            const navBerita = document.getElementById('nav-berita');
+            if (navBerita) {
+                navBerita.addEventListener('click', () => {
+                    showContentPanel('berita-content');
+                    beritaPage = 1;
+                    loadBerita();
+                });
+            }
+            // Fungsi fetch dan render berita
+            async function loadBerita() {
+                const beritaList = document.getElementById('berita-list');
+                const beritaPagination = document.getElementById('berita-pagination');
+                beritaList.innerHTML = 'Memuat berita...';
+                beritaPagination.innerHTML = '';
+                try {
+                    const res = await fetch('/api/berita-dlhp');
+                    const data = await res.json();
+                    if (!Array.isArray(data) || data.length === 0) {
+                        beritaList.innerHTML = '<p class="text-gray-500">Belum ada berita.</p>';
+                        return;
+                    }
+                    window.beritaData = data;
+                    renderBeritaPage();
+                } catch (e) {
+                    beritaList.innerHTML = '<p class="text-red-600">Gagal memuat berita.</p>';
+                }
+            }
+            function renderBeritaPage() {
+                const beritaList = document.getElementById('berita-list');
+                const beritaPagination = document.getElementById('berita-pagination');
+                const total = window.beritaData.length;
+                const totalPages = Math.ceil(total / beritaPerPage);
+                const start = (beritaPage - 1) * beritaPerPage;
+                const end = start + beritaPerPage;
+                const pageData = window.beritaData.slice(start, end);
+                beritaList.innerHTML = pageData.map((b, index) => `
+                    <div class="berita-card cursor-pointer" onclick="showBeritaDetail(${start + index})">
+                        ${b.gambar ? `<img src="${b.gambar}" class="w-20 h-20 object-cover rounded-lg float-left mr-4 mb-2" alt="Thumbnail Berita">` : ''}
+                        <h4 class="font-bold text-green-800 mb-1 text-base md:text-lg">${b.judul}</h4>
+                        <p class="text-xs text-gray-500 mb-2">${b.tanggal || ''}</p>
+                        <p class="text-gray-700 mb-2 line-clamp-3">${b.ringkasan || ''}</p>
+                        <span class="text-green-600 hover:underline font-semibold text-sm">Baca Selengkapnya</span>
+                    </div>
+                `).join('');
+                // Pagination
+                if (totalPages > 1) {
+                    let pagBtns = '';
+                    for (let i = 1; i <= totalPages; i++) {
+                        pagBtns += `<button class="${i === beritaPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                    }
+                    beritaPagination.innerHTML = pagBtns;
+                    beritaPagination.querySelectorAll('button').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            beritaPage = parseInt(this.dataset.page);
+                            renderBeritaPage();
+                            beritaList.scrollIntoView({behavior: 'smooth'});
+                        });
+                    });
+                } else {
+                    beritaPagination.innerHTML = '';
+                }
+            }
+
+
+
+            // Tutup modal ketika klik di luar modal
+            document.addEventListener('click', function(event) {
+                const modal = document.getElementById('berita-modal');
+                const modalContent = modal.querySelector('.modal-content');
+                
+                if (event.target === modal) {
+                    closeBeritaModal();
+                }
+            });
         });
+
+    
 
         let sops = {};
 
@@ -1260,6 +1571,10 @@
                         li.dataset.sopId = key;
                         li.innerHTML = `<i class="ph ph-file-text text-base mr-2"></i>${sop.title}`;
                         li.addEventListener('click', function() {
+                            // Hapus highlight dari semua SOP di semua kategori
+                            document.querySelectorAll('.sop-list li').forEach(i => i.classList.remove('active'));
+                            // Highlight yang diklik
+                            this.classList.add('active');
                             showSopDetail(key);
                         });
                         list.appendChild(li);
@@ -1348,7 +1663,11 @@
         // Event click untuk semua SOP di sidebar
         document.querySelectorAll('.sop-list li').forEach(item => {
             item.addEventListener('click', function() {
-                const sopId = item.dataset.sopId;
+                // Hapus highlight dari semua SOP di semua kategori
+                document.querySelectorAll('.sop-list li').forEach(i => i.classList.remove('active'));
+                // Highlight yang diklik
+                this.classList.add('active');
+                const sopId = this.dataset.sopId;
                 showSopDetail(sopId);
             });
         });
