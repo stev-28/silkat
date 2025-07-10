@@ -79,24 +79,52 @@
         /* Gallery specific styles */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.5rem;
         }
-        .gallery-item {
-            cursor: pointer; /* Indicate clickable */
+        @media (min-width: 640px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
-        .gallery-item img {
+        @media (min-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .gallery-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            overflow: hidden;
+            transition: box-shadow 0.25s cubic-bezier(0.4,0,0.2,1), transform 0.25s cubic-bezier(0.4,0,0.2,1), filter 0.25s cubic-bezier(0.4,0,0.2,1);
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .gallery-card:hover {
+            box-shadow: 0 8px 32px rgba(16,185,129,0.18), 0 2px 8px rgba(0,0,0,0.10);
+            transform: scale(1.04) translateY(-6px);
+            filter: brightness(1.04);
+            z-index: 2;
+        }
+        .gallery-card img {
             width: 100%;
-            height: 150px; /* Fixed height for consistency */
-            object-fit: cover; /* Crop to fit, maintain aspect ratio */
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease-in-out;
+            height: 180px;
+            object-fit: cover;
+            transition: filter 0.25s cubic-bezier(0.4,0,0.2,1);
         }
-        .gallery-item img:hover {
-            transform: scale(1.03);
+        .gallery-card:hover img {
+            filter: brightness(1.08) saturate(1.08);
         }
-
+        .gallery-card-title {
+            padding: 1rem;
+            font-weight: 600;
+            color: #222;
+            font-size: 1rem;
+            text-align: center;
+        }
         /* Modal specific styles */
         .modal-overlay {
             position: fixed;
@@ -144,6 +172,54 @@
         }
         .modal-close-button:hover {
             background-color: #eee;
+        }
+        #gallery-status-message {
+            display: block !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+            background: #fff !important;
+            border-bottom: 2px solid #059669 !important;
+            opacity: 1 !important;
+            color: #222 !important;
+            min-height: 20px !important;
+            margin: 10px 0 !important;
+            padding: 10px !important;
+        }
+        #gallery-status-message button {
+            display: inline-block !important;
+            opacity: 1 !important;
+            z-index: 1001 !important;
+            visibility: visible !important;
+            cursor: pointer !important;
+        }
+        .faq-card {
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .faq-card:hover {
+            box-shadow: 0 4px 16px rgba(16,185,129,0.10);
+            transform: translateY(-4px) scale(1.03);
+        }
+        .faq-question {
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .faq-question:hover {
+            background: #e0f2f1;
+        }
+        .faq-arrow {
+            transition: transform 0.2s;
+        }
+        @keyframes fadein-up {
+            0% { opacity: 0; transform: translateY(24px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadein-up {
+            animation: fadein-up 0.7s cubic-bezier(0.4,0,0.2,1);
         }
     </style>
 </head>
@@ -247,8 +323,8 @@
                                     <i class="ph ph-map-pin text-xl mr-2"></i>Bidang Pertanahan
                                 </div>
                                 <ul class="ml-8 text-sm text-gray-600 sop-list" data-category="bidang-pertanahan">
-                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="sertifikat"><i class="ph ph-file-text text-base mr-2"></i>Penerbitan Sertifikat Tanah</li>
-                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="izin"><i class="ph ph-file-text text-base mr-2"></i>Izin Penggunaan Lahan</li>
+                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="pengadaan_tanah"><i class="ph ph-file-text text-base mr-2"></i>SOP Pengadaan Tanah</li>
+                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="sengketa_tanah"><i class="ph ph-file-text text-base mr-2"></i>SOP Penyelesaian Sengketa Tanah</li>
                                 </ul>
                                 <div class="sop-category cursor-pointer p-2 rounded-md hover:bg-green-100 flex items-center text-gray-700 font-medium" data-category="bidang-persampahan">
                                     <i class="ph ph-trash text-xl mr-2"></i>Bidang Persampahan, B3 Dan Peningkatan Kapasitas Lingkungan Hidup
@@ -260,7 +336,9 @@
                                     <i class="ph ph-law text-xl mr-2"></i>Bidang Penataan Dan Penegakan Hukum Lingkungan Hidup
                                 </div>
                                 <ul class="ml-8 text-sm text-gray-600 sop-list" data-category="bidang-penataan-penegakan">
-                                    <!-- Add SOPs relevant to this new category if any -->
+                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="penerimaan_pengaduan"><i class="ph ph-file-text text-base mr-2"></i>SOP Dalam Proses Penerimaan Pengaduan</li>
+                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="amdal_pp22_2021"><i class="ph ph-file-text text-base mr-2"></i>Penyusunan Dokumen AMDAL sesuai PP 22 Tahun 2021</li>
+                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="pengawasan_perizinan_lh"><i class="ph ph-file-text text-base mr-2"></i>SOP Pengawasan Penaatan Perizinan dan Peraturan Perundang-undangan Pengelolaan Lingkungan Hidup</li>
                                 </ul>
                                 <div class="sop-category cursor-pointer p-2 rounded-md hover:bg-green-100 flex items-center text-gray-700 font-medium" data-category="bidang-pengendalian-pencemaran">
                                     <i class="ph ph-cloud-arrow-down text-xl mr-2"></i>Bidang Pengendalian Pencemaran Dan Kerusakan Lingkungan Hidup
@@ -272,7 +350,9 @@
                                     <i class="ph ph-flask text-xl mr-2"></i>Laboratorium Lingkungan Hidup
                                 </div>
                                 <ul class="ml-8 text-sm text-gray-600 sop-list" data-category="laboratorium-lingkungan">
-                                    <!-- Add SOPs relevant to this new category if any -->
+                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="pengujian_sampel"><i class="ph ph-file-text text-base mr-2"></i>Prosedur Pelaksanaan Pengujian Sampel</li>
+                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="penerimaan_sampel_air"><i class="ph ph-file-text text-base mr-2"></i>Prosedur Pelaksanaan Penerimaan Sampel Air</li>
+                                    <li class="py-1 flex items-center cursor-pointer hover:text-green-700" data-sop-id="penyerahan_lhu"><i class="ph ph-file-text text-base mr-2"></i>Prosedur Pelaksanaan Pembuatan dan Penyerahan LHU (Hardcopy)</li>
                                 </ul>
                                 <div class="sop-category cursor-pointer p-2 rounded-md hover:bg-green-100 flex items-center text-gray-700 font-medium" data-category="umum-bidang">
                                     <i class="ph ph-building text-xl mr-2"></i>Umum
@@ -443,10 +523,8 @@
             <div id="galeri-content" class="main-content-panel h-[calc(100%-4rem)] overflow-y-auto p-4">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Galeri Dinas Lingkungan Hidup dan Pertanahan Provinsi Papua Barat</h3>
                 <div class="bg-white p-4 rounded-lg shadow-sm">
-                    <div id="gallery-status-message" class="text-center text-gray-600 mb-4">Memuat gambar...</div>
-                    <div id="gallery-images" class="gallery-grid">
-                        <!-- Images will be loaded here dynamically -->
-                    </div>
+                    <div id="gallery-images" class="gallery-grid"></div>
+                    <div id="gallery-status-message" class="text-center text-gray-600 mb-4"></div>
                 </div>
             </div>
         </div>
@@ -481,6 +559,15 @@
         </div>
     </div>
 
+    <!-- Force Tailwind CDN to generate classes for dynamic pagination -->
+    <div class="hidden">
+      <div class="flex flex-col items-center gap-2 mt-4"></div>
+      <div class="flex justify-center gap-2 items-center"></div>
+      <button class="px-3 py-1 rounded bg-gray-200 text-gray-400 cursor-not-allowed"></button>
+      <button class="px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-green-100"></button>
+      <button class="px-3 py-1 rounded bg-green-600 text-white"></button>
+      <div class="text-xs text-gray-500 mt-1"></div>
+    </div>
 
     <script type="text/javascript">
         // Helper function to show custom modal (for general alerts)
@@ -572,17 +659,40 @@
         });
 
 
-        // --- Gallery Image Loading Logic ---
+        // --- Gallery Image Loading Logic (REGENERATED) ---
+        let allGalleryItems = [];
+
+        function renderGalleryPage() {
+            console.log('renderGalleryPage dipanggil', allGalleryItems.length);
+            const galleryImagesContainer = document.getElementById('gallery-images');
+            galleryImagesContainer.innerHTML = '';
+            allGalleryItems.forEach(item => {
+                galleryImagesContainer.innerHTML += `
+                    <div class="gallery-card" onclick="openImageModal('${item.src}', '${item.title || ''}')">
+                        <img src="${item.src}" alt="${item.title || 'Galeri'}">
+                        <div class="gallery-card-title">${item.title || ''}</div>
+                    </div>
+                `;
+            });
+            // Sembunyikan pagination
+            const galleryStatusMessage = document.getElementById('gallery-status-message');
+            galleryStatusMessage.innerHTML = '';
+        }
+
         async function loadGalleryImages() {
+            console.log('loadGalleryImages dipanggil');
             const galleryImagesContainer = document.getElementById('gallery-images');
             const galleryStatusMessage = document.getElementById('gallery-status-message');
-            galleryImagesContainer.innerHTML = ''; // Clear previous images
+
+            if (allGalleryItems.length > 0) {
+                renderGalleryPage();
+                return;
+            }
+
+            galleryImagesContainer.innerHTML = '';
             galleryStatusMessage.innerText = 'Memuat gambar...';
 
-            // URL of your Laravel backend proxy endpoint
-            const galleryProxyUrl = 'http://127.0.0.1:8000/api/galeri-eksternal'; // Sesuaikan URL ini jika backend Anda berjalan di port atau domain lain
-            
-            // Dummy image data for fallback/CORS issues if proxy fails
+            const galleryProxyUrl = '/api/galeri-eksternal';
             const dummyImages = [
                 { src: 'https://placehold.co/300x200/a7f3d0/065f46?text=DUMMY+1', title: 'Gambar Demo 1' },
                 { src: 'https://placehold.co/300x200/6ee7b7/065f46?text=DUMMY+2', title: 'Gambar Demo 2' },
@@ -591,62 +701,50 @@
             ];
 
             try {
-                console.log('Attempting to fetch gallery images from:', galleryProxyUrl); // Log the URL being fetched
-                const response = await fetch(galleryProxyUrl); 
-                console.log('Response status:', response.status); // Log the HTTP status code
-
+                console.log('Mencoba fetch dari:', galleryProxyUrl);
+                const response = await fetch(galleryProxyUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
                 if (!response.ok) {
-                    let errorDetails = '';
-                    try {
-                        errorDetails = JSON.stringify(await response.json(), null, 2); // Try to parse error JSON
-                    } catch (e) {
-                        errorDetails = response.statusText; // Fallback to status text if not JSON
-                    }
-                    throw new Error(`HTTP error! Status: ${response.status}. Details: ${errorDetails}`);
+                    throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
                 }
-
-                const galleryItems = await response.json(); // Assuming response is an array of { src: 'url', title: 'title' }
-                console.log('Successfully fetched gallery items:', galleryItems); // Log the fetched items
-
-                if (galleryItems.length > 0) {
-                    galleryImagesContainer.innerHTML = ''; // Clear "Memuat gambar..." message
-                    galleryItems.forEach(item => {
-                        if (item.src) {
-                            galleryImagesContainer.innerHTML += `
-                                <div class="gallery-item rounded-lg overflow-hidden" onclick="openImageModal('${item.src}', '${item.title || ''}')">
-                                    <img src="${item.src}" onerror="this.onerror=null; this.src='https://placehold.co/300x200/cccccc/333333?text=Gambar+Gagal+Dimuat';" alt="${item.title || 'Gambar Galeri'}">
-                                    <p class="text-sm text-gray-700 mt-2 p-2">${item.title || ''}</p>
-                                </div>
-                            `;
-                        }
-                    });
-                    galleryStatusMessage.innerText = ''; // Clear status message on success
+                
+                const galleryItems = await response.json();
+                console.log('Gallery items received:', galleryItems);
+                
+                if (galleryItems && galleryItems.length > 0) {
+                    allGalleryItems = galleryItems;
+                    renderGalleryPage();
+                    galleryStatusMessage.innerText = '';
                 } else {
                     galleryStatusMessage.innerText = 'Tidak ada gambar ditemukan dari sumber eksternal melalui proxy.';
                 }
-
             } catch (error) {
-                console.error('Error loading gallery images from proxy:', error);
+                console.error('Error fetching gallery:', error);
                 galleryStatusMessage.innerHTML = `
                     <p class="text-sm text-red-600 mb-2">
                         Gagal memuat galeri dari sumber eksternal melalui proxy: <strong>${error.message}</strong>.
+                        <br>Error detail: ${error.toString()}
                         <br>Mohon pastikan backend proxy Laravel sudah diatur dengan benar, berjalan, dan dapat mengakses URL eksternal tersebut.
                     </p>
                     <p>Menampilkan contoh gambar:</p>
                 `;
-                dummyImages.forEach(item => { // Gunakan item.src dan item.title dari dummyImages
-                    galleryImagesContainer.innerHTML += `
-                        <div class="gallery-item rounded-lg overflow-hidden" onclick="openImageModal('${item.src}', '${item.title}')">
-                            <img src="${item.src}" alt="${item.title || 'Galeri Gambar Dummy'}">
-                            <p class="text-sm text-gray-700 mt-2 p-2">${item.title || ''}</p>
-                        </div>
-                    `;
-                });
+                allGalleryItems = dummyImages;
+                renderGalleryPage();
             }
         }
 
 
         document.addEventListener('DOMContentLoaded', function() {
+            fetchSopData();
             const tabsContainer = document.getElementById('tabs-container'); // Get the tabs container
             const dynamicHeadlineContainer = document.getElementById('dynamic-headline-container'); // Get dynamic headline container
             const dynamicHeadlineText = document.getElementById('dynamic-headline-text'); // Get dynamic headline text
@@ -682,19 +780,18 @@
                 if (panelToShowId === 'sop-content' || panelToShowId === 'qa-content') {
                     tabsContainer.classList.remove('hidden');
                     dynamicHeadlineContainer.classList.add('hidden');
-                    // Manage active state for SOP and QA tabs
                     if (panelToShowId === 'sop-content') {
                         tabSopBtn.classList.add('active');
                         tabQaBtn.classList.remove('active');
-                    } else { // qa-content
+                    } else {
                         tabQaBtn.classList.add('active');
                         tabSopBtn.classList.remove('active');
                     }
-                } else { // profil-dinas-content, pengumuman-content, or galeri-content
+                } else {
                     tabsContainer.classList.add('hidden');
                     dynamicHeadlineContainer.classList.remove('hidden');
-                    tabSopBtn.classList.remove('active'); // Ensure no tabs are active
-                    tabQaBtn.classList.remove('active'); // Ensure no tabs are active
+                    tabSopBtn.classList.remove('active');
+                    tabQaBtn.classList.remove('active');
 
                     if (panelToShowId === 'profil-dinas-content') {
                         dynamicHeadlineText.innerText = 'Profil Dinas';
@@ -702,18 +799,33 @@
                         dynamicHeadlineText.innerText = 'Pengumuman';
                     } else if (panelToShowId === 'galeri-content') {
                         dynamicHeadlineText.innerText = 'Galeri';
-                        loadGalleryImages(); // Call function to load gallery images
+                        loadGalleryImages();
+                        const galeriPanel = document.getElementById('galeri-content');
+                        if (galeriPanel.dataset.needsRender === '1') {
+                            renderGalleryPage();
+                            delete galeriPanel.dataset.needsRender;
+                        }
                     }
                 }
             }
 
 
             // Event Listeners for Tab Buttons
-            tabSopBtn.addEventListener('click', () => showContentPanel('sop-content'));
+            tabSopBtn.addEventListener('click', () => {
+                showContentPanel('sop-content');
+                // Reset tampilan ke kondisi awal
+                document.querySelectorAll('.sop-list').forEach(list => list.style.display = 'none');
+                sopDetailContent.innerHTML = '<p class="text-center text-gray-500">Pilih bidang di samping untuk melihat rangkuman dan SOP.</p>';
+            });
             tabQaBtn.addEventListener('click', () => showContentPanel('qa-content'));
 
             // Event Listeners for Nav Cards (main navigation)
-            navSop.addEventListener('click', () => showContentPanel('sop-content'));
+            navSop.addEventListener('click', () => {
+                showContentPanel('sop-content');
+                // Reset tampilan ke kondisi awal
+                document.querySelectorAll('.sop-list').forEach(list => list.style.display = 'none');
+                sopDetailContent.innerHTML = '<p class="text-center text-gray-500">Pilih bidang di samping untuk melihat rangkuman dan SOP.</p>';
+            });
             navQa.addEventListener('click', () => showContentPanel('qa-content'));
             navProfilDinas.addEventListener('click', () => showContentPanel('profil-dinas-content'));
             navPengumuman.addEventListener('click', () => showContentPanel('pengumuman-content'));
@@ -905,73 +1017,80 @@
 
 
             // Mock SOP Data (in a real app, this would come from a database)
-            const sops = {
-                cuti: {
-                    title: "SOP Permintaan Cuti",
-                    content: "Prosedur standar untuk mengajukan cuti tahunan, cuti sakit, atau cuti khusus. Termasuk formulir yang dibutuhkan dan alur persetujuan.",
-                    file: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", // Dummy PDF link
-                    bidang_id: "umum-bidang"
-                },
-                mutasi: {
-                    title: "SOP Mutasi Pegawai",
-                    content: "Panduan lengkap mengenai proses mutasi pegawai antar divisi atau unit kerja, persyaratan, dan dokumen pendukung.",
-                    file: "https://www.africau.edu/images/default/sample.pdf", // Another dummy PDF
-                    bidang_id: "umum-bidang"
-                },
-                dana: {
-                    title: "SOP Permintaan Dana",
-                    content: "Langkah-langkah untuk mengajukan permintaan dana operasional atau kegiatan, termasuk otorisasi dan pelaporan keuangan.",
-                    file: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                    bidang_id: "umum-bidang"
-                },
-                dinas: {
-                    title: "SOP Laporan Perjalanan Dinas",
-                    content: "Prosedur pembuatan dan penyerahan laporan perjalanan dinas, termasuk kelengkapan bukti pengeluaran dan akomodasi.",
-                    file: "https://www.africau.edu/images/default/sample.pdf",
-                    bidang_id: "umum-bidang"
-                },
-                atk: {
-                    title: "SOP Permintaan ATK",
-                    content: "Prosedur pengajuan permintaan alat tulis kantor (ATK) dan mekanisme distribusinya di lingkungan dinas.",
-                    file: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                    bidang_id: "umum-bidang"
-                },
-                limbah: {
-                    title: "SOP Penanganan Limbah B3",
-                    content: "Panduan aman penanganan, penyimpanan, dan pembuangan limbah bahan berbahaya dan beracun (B3) sesuai regulasi lingkungan.",
-                    file: "https://www.africau.edu/images/default/sample.pdf",
-                    bidang_id: "bidang-persampahan"
-                },
-                amdal: {
-                    title: "SOP Prosedur AMDAL",
-                    content: "Alur proses Analisis Mengenai Dampak Lingkungan (AMDAL) untuk proyek pembangunan, dari pengajuan hingga penerbitan izin lingkungan.",
-                    file: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                    bidang_id: "bidang-pengendalian-pencemaran"
-                },
-                sertifikat: {
-                    title: "SOP Penerbitan Sertifikat Tanah",
-                    content: "Prosedur dan persyaratan untuk penerbitan sertifikat hak atas tanah, termasuk verifikasi data dan pengukuran lahan.",
-                    file: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                    bidang_id: "bidang-pertanahan"
-                },
-                izin: {
-                    title: "SOP Izin Penggunaan Lahan",
-                    content: "Panduan pengajuan izin penggunaan dan pemanfaatan lahan untuk berbagai keperluan, sesuai dengan tata ruang wilayah.",
-                    file: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                    bidang_id: "bidang-pertanahan"
-                }
+           
+
+            // Tambahkan rangkuman kerja bidang pertanahan
+            const bidangSummaries = {
+                "bidang-pertanahan": "Bidang Pertanahan bertugas melaksanakan perumusan dan pelaksanaan kebijakan di bidang pengadaan tanah, penataan, pendaftaran, serta penyelesaian sengketa tanah di wilayah Papua Barat. Fokus utama adalah memastikan proses pengadaan tanah berjalan transparan, adil, dan sesuai peraturan, serta memfasilitasi penyelesaian sengketa tanah secara mediasi dan administratif.",
+                "bidang-penataan-penegakan": "Bidang Penataan dan Penegakan Hukum Lingkungan Hidup bertugas menangani penataan ruang dan penegakan hukum di bidang lingkungan hidup, termasuk penerimaan pengaduan, penyusunan dokumen AMDAL, serta pengawasan kepatuhan perizinan dan peraturan lingkungan.",
+                "bidang-laboratorium": "Bidang Laboratorium Lingkungan Hidup bertugas melakukan pengujian dan analisis sampel lingkungan, memberikan hasil uji, dan menyediakan data lingkungan untuk kebijakan dan pengawasan.",
+                "laboratorium-lingkungan": "Laboratorium Lingkungan Hidup bertugas melakukan pengujian dan analisis sampel lingkungan, memberikan hasil uji, serta menyediakan data lingkungan untuk mendukung kebijakan dan pengawasan lingkungan hidup di Papua Barat.",
+                // ... bidang lain jika perlu ...
             };
 
             // Initially hide all SOP lists
             document.querySelectorAll('.sop-list').forEach(list => list.style.display = 'none');
 
-            // Toggle SOP list visibility for desktop/tablet categories
+            // Pada awal (setelah deklarasi sopDetailContent), tampilkan pesan default
+            sopDetailContent.innerHTML = '<p class="text-center text-gray-500">Pilih bidang di samping untuk melihat rangkuman dan SOP.</p>';
+
+            // --- Tambahkan logika toggle dan highlight pada kategori bidang (sop-category) ---
+            let lastOpenedCategory = null;
             sopCategories.forEach(category => {
                 category.addEventListener('click', function() {
                     const targetCategory = this.dataset.category;
                     const list = document.querySelector(`.sop-list[data-category="${targetCategory}"]`);
+                    // Toggle: jika klik dua kali pada bidang yang sama, tutup daftar SOP
+                    if (lastOpenedCategory === targetCategory && list && list.style.display === 'block') {
+                        list.style.display = 'none';
+                        this.classList.remove('bg-green-100', 'font-bold');
+                        lastOpenedCategory = null;
+                        // Reset detail panel jika ingin
+                        // sopDetailContent.innerHTML = '<p class="text-center text-gray-500">Pilih bidang di samping untuk melihat rangkuman dan SOP.</p>';
+                        return;
+                    }
+                    // Sembunyikan semua daftar SOP dan reset highlight
+                    document.querySelectorAll('.sop-list').forEach(l => l.style.display = 'none');
+                    sopCategories.forEach(cat => cat.classList.remove('bg-green-100', 'font-bold'));
+                    // Tampilkan daftar SOP bidang yang diklik dan highlight
                     if (list) {
-                        list.style.display = list.style.display === 'none' ? 'block' : 'none';
+                        list.style.display = 'block';
+                        this.classList.add('bg-green-100', 'font-bold');
+                        lastOpenedCategory = targetCategory;
+                    }
+                    // ... kode rangkuman/narahubung tetap ...
+                    if (bidangSummaries[targetCategory]) {
+                        const contact = bidangContacts[targetCategory];
+                        let contactHtml = '';
+                        if (contact) {
+                            const whatsappLink = `https://wa.me/${contact.number}?text=Halo%20${encodeURIComponent(contact.contactPerson)}%20dari%20${encodeURIComponent(contact.name)}%2C%20saya%20ingin%20bertanya...`;
+                            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(whatsappLink)}`;
+                            contactHtml = `
+                                <div class=\"bg-white rounded-lg shadow-sm p-4 mt-4\">
+                                    <div class=\"mb-2\">
+                                        <span class=\"block text-base font-semibold text-green-800\">${contact.contactPerson}</span>
+                                        <span class=\"block text-xs text-gray-700 mb-1\">${contact.role} - ${contact.name}</span>
+                                    </div>
+                                    <a href=\"${whatsappLink}\" target=\"_blank\"
+                                       class=\"inline-flex items-center px-4 py-2 mt-1 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200\">
+                                        <i class=\"ph ph-whatsapp-logo text-lg mr-2\"></i>Hubungi via WhatsApp
+                                    </a>
+                                    <div class=\"flex flex-col items-center mt-3\">
+                                        <p class=\"text-xs text-gray-600 mb-1\">Scan QR code ini untuk terhubung di WA</p>
+                                        <img src=\"${qrCodeUrl}\" alt=\"WhatsApp QR Code\" class=\"w-24 h-24 border border-gray-300 rounded-lg p-1\">
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        sopDetailContent.innerHTML = `
+                            <div class=\"bg-green-50 border border-green-300 rounded-lg p-5 animate-fadein-up mt-0 mb-2\">
+                                <h4 class=\"text-xl font-bold text-green-800 mb-1\">Selamat Datang di ${contact ? contact.name : ''},</h4>
+                                <p class=\"text-green-700 text-sm mb-3\">${bidangSummaries[targetCategory]}</p>
+                                ${contactHtml}
+                            </div>
+                        `;
+                        sopActions.classList.add('hidden');
+                        sopWhatsappAction.classList.add('hidden');
                     }
                 });
             });
@@ -982,30 +1101,56 @@
                     const sopId = item.dataset.sopId;
                     const sop = sops[sopId];
                     if (sop) {
-                        sopDetailContent.innerHTML = `
-                            <h4 class="text-xl font-semibold text-green-800 mb-2">${sop.title}</h4>
-                            <p class="text-gray-700 text-base mb-4">${sop.content}</p>
-                            <p class="text-gray-600 text-xs">Sumber: Dinas Lingkungan Hidup dan Pertanahan</p>
-                        `;
-                        sopViewBtn.href = sop.file;
-                        sopDownloadBtn.href = sop.file;
-                        sopDownloadBtn.setAttribute('download', `${sop.title.replace(/\s/g, '_')}.pdf`);
-                        sopActions.classList.remove('hidden');
+                        if (sop.faq) {
+                            let faqHtml = '<div class="space-y-3">';
+                            sop.faq.forEach((f, idx) => {
+                                faqHtml += `
+                                    <div class="faq-card border rounded-lg shadow-sm bg-white">
+                                        <button type="button" class="w-full text-left px-4 py-3 font-semibold text-green-800 focus:outline-none flex justify-between items-center faq-question" data-faq-idx="${idx}">
+                                            <span>${f.q}</span>
+                                            <span class="faq-arrow transition-transform">&#9660;</span>
+                                        </button>
+                                        <div class="faq-answer px-4 pb-3 text-gray-700 hidden">
+                                            ${f.a}
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            faqHtml += '</div>';
+                            sopDetailContent.innerHTML = `
+                                <h4 class="text-xl font-semibold text-green-800 mb-2">${sop.title}</h4>
+                                <p class="text-sm text-gray-600 mb-4">${sop.content}</p>
+                                ${faqHtml}
+                                <p class="text-gray-600 text-xs mt-4">Sumber: Dinas Lingkungan Hidup dan Pertanahan</p>
+                            `;
 
-                        // --- WhatsApp integration for SOP details ---
-                        const bidangData = bidangContacts[sop.bidang_id]; 
-                        if (bidangData) {
-                            const whatsappUrl = `https://wa.me/${bidangData.number}?text=Halo%20${encodeURIComponent(bidangData.contactPerson)}%20dari%20${encodeURIComponent(bidangData.name)}%2C%20saya%20ingin%20bertanya%20mengenai%20SOP%20${encodeURIComponent(sop.title)}.`;
-                            sopWhatsappBtn.href = whatsappUrl;
-                            sopWhatsappAction.classList.remove('hidden');
+                            // Pasang event click accordion (bisa buka/tutup independen)
+                            sopDetailContent.querySelectorAll('.faq-question').forEach(btn => {
+                                btn.addEventListener('click', function() {
+                                    const answer = this.parentElement.querySelector('.faq-answer');
+                                    const arrow = this.querySelector('.faq-arrow');
+                                    if (answer.classList.contains('hidden')) {
+                                        answer.classList.remove('hidden');
+                                        arrow.style.transform = 'rotate(180deg)';
+                                    } else {
+                                        answer.classList.add('hidden');
+                                        arrow.style.transform = '';
+                                    }
+                                });
+                            });
                         } else {
-                            sopWhatsappAction.classList.add('hidden');
+                            sopDetailContent.innerHTML = `
+                                <h4 class="text-xl font-semibold text-green-800 mb-2">${sop.title}</h4>
+                                <p class="text-gray-700 text-base mb-4">${sop.content}</p>
+                                <p class="text-gray-600 text-xs">Sumber: Dinas Lingkungan Hidup dan Pertanahan</p>
+                            `;
                         }
-
+                        sopActions.classList.add('hidden');
+                        sopWhatsappAction.classList.add('hidden');
                     } else {
                         sopDetailContent.innerHTML = '<p class="text-center text-gray-500">SOP tidak ditemukan.</p>';
                         sopActions.classList.add('hidden');
-                        sopWhatsappAction.classList.add('hidden'); // Hide WhatsApp button if SOP not found
+                        sopWhatsappAction.classList.add('hidden');
                     }
                 });
             });
@@ -1074,6 +1219,138 @@
 
             // Initial state: ensure SOP tab is active and visible
             showContentPanel('sop-content'); // Changed to use new showContentPanel function
+        });
+
+        let sops = {};
+
+        async function fetchSopData() {
+            const sopRes = await fetch('/api/sop');
+            const sopData = await sopRes.json();
+            sops = {};
+            sopData.forEach(sop => {
+                sops[sop.slug || sop.id] = {
+                    title: sop.judul,
+                    content: sop.deskripsi,
+                    bidang_id: sop.bidang_id,
+                    file: sop.file, // tambahkan baris ini
+                    faq: sop.faqs ? sop.faqs.map(f => ({ q: f.pertanyaan, a: f.jawaban })) : []
+                };
+            });
+            renderSopList();
+        }
+
+        function renderSopList() {
+            // Mapping kategori sidebar ke bidang_id di database
+            const bidangMap = {
+                'bidang-pertanahan': 1,
+                'bidang-persampahan': 2,
+                'bidang-penataan-penegakan': 3,
+                'bidang-pengendalian-pencemaran': 4,
+                'laboratorium-lingkungan': 5,
+                'umum-bidang': 6
+            };
+            Object.entries(bidangMap).forEach(([kategori, bidangId]) => {
+                const list = document.querySelector(`.sop-list[data-category="${kategori}"]`);
+                if (!list) return;
+                list.innerHTML = '';
+                Object.entries(sops).forEach(([key, sop]) => {
+                    if (sop.bidang_id == bidangId) {
+                        const li = document.createElement('li');
+                        li.className = 'py-1 flex items-center cursor-pointer hover:text-green-700';
+                        li.dataset.sopId = key;
+                        li.innerHTML = `<i class="ph ph-file-text text-base mr-2"></i>${sop.title}`;
+                        li.addEventListener('click', function() {
+                            showSopDetail(key);
+                        });
+                        list.appendChild(li);
+                    }
+                });
+            });
+        }
+
+        function showSopDetail(sopId) {
+            const sop = sops[sopId];
+            const sopDetailContent = document.getElementById('sop-detail-content');
+            if (sop && sop.faq && sop.faq.length > 0) {
+                let faqHtml = '<div class="space-y-3">';
+                sop.faq.forEach((f, idx) => {
+                    faqHtml += `
+                        <div class="faq-card border rounded-lg shadow-sm bg-white">
+                            <button type="button" class="w-full text-left px-4 py-3 font-semibold text-green-800 focus:outline-none flex justify-between items-center faq-question" data-faq-idx="${idx}">
+                                <span>${f.q}</span>
+                                <span class="faq-arrow transition-transform">&#9660;</span>
+                            </button>
+                            <div class="faq-answer px-4 pb-3 text-gray-700 hidden">
+                                ${f.a}
+                            </div>
+                        </div>
+                    `;
+                });
+                faqHtml += '</div>';
+                let downloadBtn = '';
+                if (sop.file) {
+                    downloadBtn = `
+                        <a href="${sop.file}" download target="_blank"
+                           class="block w-full mt-6 border border-green-500 rounded-lg px-4 py-3 text-center text-green-700 font-semibold hover:bg-green-50 transition-colors duration-200 flex items-center justify-center gap-2">
+                            <svg xmlns='http://www.w3.org/2000/svg' class='inline-block' width='20' height='20' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3'/></svg>
+                            Unduh SOP (PDF)
+                        </a>
+                    `;
+                }
+                sopDetailContent.innerHTML = `
+                    <h4 class="text-xl font-semibold text-green-800 mb-2">${sop.title}</h4>
+                    <p class="text-sm text-gray-600 mb-4">${sop.content}</p>
+                    ${faqHtml}
+                    ${downloadBtn}
+                    <p class="text-gray-600 text-xs mt-4">Sumber: Dinas Lingkungan Hidup dan Pertanahan</p>
+                `;
+
+                // Pasang event click accordion (bisa buka/tutup independen)
+                sopDetailContent.querySelectorAll('.faq-question').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const answer = this.parentElement.querySelector('.faq-answer');
+                        const arrow = this.querySelector('.faq-arrow');
+                        if (answer.classList.contains('hidden')) {
+                            answer.classList.remove('hidden');
+                            arrow.style.transform = 'rotate(180deg)';
+                        } else {
+                            answer.classList.add('hidden');
+                            arrow.style.transform = '';
+                        }
+                    });
+                });
+            } else if (sop) {
+                sopDetailContent.innerHTML = `
+                    <h4 class="text-xl font-semibold text-green-800 mb-2">${sop.title}</h4>
+                    <p class="text-sm text-gray-600 mb-4">${sop.content}</p>
+                    <p class="text-gray-600 text-xs">Sumber: Dinas Lingkungan Hidup dan Pertanahan</p>
+                `;
+            } else {
+                sopDetailContent.innerHTML = '<p class="text-center text-gray-500">SOP tidak ditemukan.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchSopData();
+            // ... kode lain ...
+        });
+
+        // Tambahkan kembali data hardcoded untuk SOP dan FAQ
+        
+
+        
+
+        // Pada load awal, tampilkan Bidang Pertanahan dan SOP-nya
+        const listPertanahan = document.querySelector('.sop-list[data-category="bidang-pertanahan"]');
+        if (listPertanahan) listPertanahan.style.display = 'block';
+        if (typeof renderSopList === 'function') renderSopList();
+
+        // Event click untuk semua SOP di sidebar
+        document.querySelectorAll('.sop-list li').forEach(item => {
+            item.addEventListener('click', function() {
+                const sopId = item.dataset.sopId;
+                showSopDetail(sopId);
+            });
         });
     </script>
 </body>

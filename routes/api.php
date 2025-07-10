@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GalleryProxyController;
-
+use App\Http\Controllers\SopController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,3 +23,8 @@ Route::get('/galeri-eksternal', [GalleryProxyController::class, 'fetchExternalGa
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+// routes/api.php
+Route::get('/sop', [SopController::class, 'index']);
+Route::get('/galeri-tes', function() {
+    return ['ok' => true];
+});
