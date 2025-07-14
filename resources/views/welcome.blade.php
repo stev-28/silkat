@@ -353,17 +353,42 @@
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
         }
+
+         /* Custom Header Styles */
+         .header-gradient-custom {
+            background: linear-gradient(to bottom right, #16a34a, #047857); /* Darker, richer green gradient */
+        }
+        .header-shadow-custom {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); /* Stronger, more elegant shadow */
+        }
+        .header-pattern-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.1; /* Subtle opacity */
+            z-index: 0; /* Behind content */
+        }
+
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Header - Moved outside and above the main container -->
-    <header class="w-full text-center py-6 md:py-8 px-4 bg-gradient-to-b from-green-50 to-white shadow-md rounded-b-lg">
-        <div class="max-w-screen-xl mx-auto flex flex-col items-center">
-            <img src="/images/pabar.png" alt="Logo Dinas" class="h-20 w-20 rounded-full mb-4 shadow-lg">
-            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-1">DINAS LINGKUNGAN HIDUP DAN PERTANAHAN</h1>
-            <p class="text-lg sm:text-xl md:text-2xl text-gray-600">PROVINSI PAPUA BARAT</p>
-            <p class="text-sm sm:text-base text-gray-500 mt-2">Jl. Brigjen (Purn) Abraham O Atururi Kompleks Perkantoran Gubernur Arfai</p>
+        <!-- Header - Revised for more attractive look -->
+    <header class="w-full text-center py-6 md:py-8 px-4 header-gradient-custom text-white header-shadow-custom rounded-b-lg relative overflow-hidden">
+        <!-- Subtle pattern overlay -->
+        <div class="header-pattern-overlay">
+            <svg class="w-full h-full" fill="none" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+                <pattern id="header-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <circle cx="5" cy="5" r="1" fill="rgba(255,255,255,0.1)"></circle>
+                </pattern>
+                <rect x="0" y="0" width="100%" height="100%" fill="url(#header-pattern)"></rect>
+            </svg>
+        </div>
+        <div class="max-w-screen-xl mx-auto flex flex-col items-center relative z-10">
+            <!-- Updated image source to a placeholder for better rendering in isolated environments -->
+            <img src="/images/pabar.png" alt="Logo Dinas" class="h-24 w-24 rounded-full mb-4 shadow-lg ">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-1 tracking-wide">DINAS LINGKUNGAN HIDUP DAN PERTANAHAN</h1>
+            <p class="text-lg sm:text-xl md:text-2xl opacity-90">PROVINSI PAPUA BARAT</p>
+            <p class="text-sm sm:text-base opacity-80 mt-2">Jl. Brigjen (Purn) Abraham O Atururi Kompleks Perkantoran Gubernur Arfai</p>
         </div>
     </header>
 
@@ -372,7 +397,7 @@
 
         <!-- Left Section - SILKAT Title & Navigation Cards -->
         <div class="w-full md:w-1/3 lg:w-1/4 flex flex-col items-center text-center p-4 md:p-6 bg-green-50 rounded-lg shadow-md">
-            <h2 class="text-4xl lg:text-5xl font-extrabold text-green-800 mb-2">SILKAT</h2>
+        <img src="/images/silkatlogo.png" alt="SILKAT Logo" class="h-20 w-auto mb-2 mx-auto">
             <p class="text-lg lg:text-xl text-green-700 mb-8">Layanan Kantor Terpadu</p>
 
             <nav class="grid grid-cols-2 gap-4 w-full">
@@ -663,6 +688,7 @@
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Galeri Dinas Lingkungan Hidup dan Pertanahan Provinsi Papua Barat</h3>
                 <div class="bg-white p-4 rounded-lg shadow-sm">
                     <div id="gallery-images" class="gallery-grid"></div>
+                    <div id="gallery-pagination" class="berita-pagination"></div>
                     <div id="gallery-status-message" class="text-center text-gray-600 mb-4"></div>
                 </div>
             </div>
@@ -686,11 +712,14 @@
         </div>
     </div>
 
-    <!-- WhatsApp Floating Action Button (FAB) -->
-    <a id="whatsapp-fab" href="https://wa.me/6281234567890?text=Halo%20Dinas%20Lingkungan%20Hidup%20dan%20Pertanahan%2C%20saya%20ingin%20bertanya..." target="_blank"
-       class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transform hover:scale-110 transition-transform duration-200 ease-in-out flex items-center justify-center z-50">
-        <i class="ph ph-whatsapp-logo text-3xl"></i>
-    </a>
+    <!-- Footer -->
+    <footer class="w-full bg-gray-800 text-gray-200 py-6 mt-10 rounded-t-2xl">
+        <div class="max-w-screen-xl mx-auto px-4">
+            <div class="text-center text-sm">
+                &copy; 2025 Dinas Lingkungan Hidup dan Pertanahan Provinsi Papua Barat. Semua Hak Dilindungi.
+            </div>
+        </div>
+    </footer>
 
     <!-- Custom Modal for Messages (instead of alert/confirm) -->
     <div id="custom-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-[9999]">
@@ -817,12 +846,19 @@
 
         // --- Gallery Image Loading Logic (REGENERATED) ---
         let allGalleryItems = [];
+        let galleryPage = 1;
+        const galleryPerPage = 6;
 
         function renderGalleryPage() {
-            console.log('renderGalleryPage dipanggil', allGalleryItems.length);
             const galleryImagesContainer = document.getElementById('gallery-images');
+            const galleryPagination = document.getElementById('gallery-pagination');
             galleryImagesContainer.innerHTML = '';
-            allGalleryItems.forEach(item => {
+            const total = allGalleryItems.length;
+            const totalPages = Math.ceil(total / galleryPerPage);
+            const start = (galleryPage - 1) * galleryPerPage;
+            const end = start + galleryPerPage;
+            const pageData = allGalleryItems.slice(start, end);
+            pageData.forEach(item => {
                 galleryImagesContainer.innerHTML += `
                     <div class="gallery-card" onclick="openImageModal('${item.src}', '${item.title || ''}')">
                         <img src="${item.src}" alt="${item.title || 'Galeri'}">
@@ -830,7 +866,26 @@
                     </div>
                 `;
             });
-            // Sembunyikan pagination
+            // Pagination
+            if (galleryPagination) {
+                if (totalPages > 1) {
+                    let pagBtns = '';
+                    for (let i = 1; i <= totalPages; i++) {
+                        pagBtns += `<button class="${i === galleryPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                    }
+                    galleryPagination.innerHTML = pagBtns;
+                    galleryPagination.querySelectorAll('button').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            galleryPage = parseInt(this.dataset.page);
+                            renderGalleryPage();
+                            galleryImagesContainer.scrollIntoView({behavior: 'smooth'});
+                        });
+                    });
+                } else {
+                    galleryPagination.innerHTML = '';
+                }
+            }
+            // Hide status message
             const galleryStatusMessage = document.getElementById('gallery-status-message');
             galleryStatusMessage.innerHTML = '';
         }
@@ -841,6 +896,7 @@
             const galleryStatusMessage = document.getElementById('gallery-status-message');
 
             if (allGalleryItems.length > 0) {
+                galleryPage = 1;
                 renderGalleryPage();
                 return;
             }
@@ -878,6 +934,7 @@
                 
                 if (galleryItems && galleryItems.length > 0) {
                     allGalleryItems = galleryItems;
+                    galleryPage = 1;
                     renderGalleryPage();
                     galleryStatusMessage.innerText = '';
                 } else {
@@ -894,6 +951,7 @@
                     <p>Menampilkan contoh gambar:</p>
                 `;
                 allGalleryItems = dummyImages;
+                galleryPage = 1;
                 renderGalleryPage();
             }
         }
