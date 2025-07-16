@@ -623,58 +623,58 @@
                     <h3 class="text-2xl font-bold text-green-800 mb-6 text-center">Profil Dinas Lingkungan Hidup dan Pertanahan Provinsi Papua Barat</h3>
 
                     <!-- Baris 1: Kepala Dinas & Sekretaris Dinas (Gubernur & Wakil Gubernur) -->
-                    <div class="flex flex-col md:flex-row gap-4 mb-6">
-                        <div class="flex-1 bg-gray-50 rounded-xl shadow-lg p-6 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up">
-                            <div class="w-28 h-32 bg-gray-200 rounded-lg flex items-center justify-center mb-2 overflow-hidden shadow-md">
+                    <div class="flex flex-col md:flex-row gap-3 md:gap-4 mb-4 md:mb-6">
+                        <div class="flex-1 bg-gray-50 rounded-xl shadow-lg p-4 md:p-6 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up">
+                            <div class="w-24 h-28 md:w-28 md:h-32 bg-gray-200 rounded-lg flex items-center justify-center mb-2 overflow-hidden shadow-md">
                                 <img src="/images/gub.png" alt="Foto Gubernur" class="object-cover w-full h-full" onerror="this.style.display='none'">
                                 <span class="text-gray-400 text-xs" style="display:none;">Foto Gubernur</span>
                             </div>
-                            <p class="font-semibold text-green-900 text-base">Drs.Dominggus Mandacan,M.Si</p>
-                            <p class="text-xs text-gray-600">Gubernur Papua Barat</p>
+                            <p class="font-semibold text-green-900 text-sm md:text-base text-center">Drs.Dominggus Mandacan,M.Si</p>
+                            <p class="text-xs text-gray-600 text-center">Gubernur Papua Barat</p>
                         </div>
-                        <div class="flex-1 bg-gray-50 rounded-xl shadow-lg p-6 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up" style="animation-delay:0.1s;">
-                            <div class="w-28 h-32 bg-gray-200 rounded-lg flex items-center justify-center mb-2 overflow-hidden shadow-md">
+                        <div class="flex-1 bg-gray-50 rounded-xl shadow-lg p-4 md:p-6 flex flex-col items-center justify-center transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up" style="animation-delay:0.1s;">
+                            <div class="w-24 h-28 md:w-28 md:h-32 bg-gray-200 rounded-lg flex items-center justify-center mb-2 overflow-hidden shadow-md">
                                 <img src="/images/wagub.png" alt="Foto Wakil Gubernur" class="object-cover w-full h-full" onerror="this.style.display='none'">
                                 <span class="text-gray-400 text-xs" style="display:none;">Foto Wakil Gubernur</span>
                             </div>
-                            <p class="font-semibold text-green-900 text-base">Mohamad Lakotani,SH.,M.Si</p>
-                            <p class="text-xs text-gray-600">Wakil Gubernur Papua Barat</p>
+                            <p class="font-semibold text-green-900 text-sm md:text-base text-center">Mohamad Lakotani,SH.,M.Si</p>
+                            <p class="text-xs text-gray-600 text-center">Wakil Gubernur Papua Barat</p>
                         </div>
                     </div>
 
                     <!-- Baris 2: Paragraf Profil -->
-                    <div class="mb-6 text-gray-700 text-justify">
+                    <div class="mb-4 md:mb-6 text-gray-700 text-justify text-sm md:text-base">
                         Dinas Lingkungan Hidup dan Pertanian Provinsi Papua Barat adalah garda terdepan pemerintah daerah dalam mewujudkan pembangunan berkelanjutan di Tanah Papua Barat. Dinas ini mengemban amanah besar untuk menjaga kelestarian lingkungan hidup dan menata kelola pertanian demi masa depan yang lebih baik.
                     </div>
 
                     <!-- Baris 3: 3 Kartu Info -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-6">
                         <div class="rounded-xl bg-white border-2 border-green-200 shadow-lg p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up">
-                            <div class="text-3xl mb-2"><i class="ph ph-bank"></i></div>
-                            <div class="font-bold text-green-700 mb-1">Dasar Hukum</div>
-                            <div class="text-xs text-gray-600 text-center">Peraturan Daerah Provinsi Papua Barat Nomor 7 Tahun 2016<br>Peraturan Gubernur Papua Barat Nomor 32 Tahun 2018</div>
+                            <div class="text-2xl md:text-3xl mb-2"><i class="ph ph-bank"></i></div>
+                            <div class="font-bold text-green-700 mb-1 text-sm md:text-base">Dasar Hukum</div>
+                            <div class="text-xs md:text-sm text-gray-600 text-center">Peraturan Daerah Provinsi Papua Barat Nomor 7 Tahun 2016<br>Peraturan Gubernur Papua Barat Nomor 32 Tahun 2018</div>
                         </div>
                         <div class="rounded-xl bg-white border-2 border-green-200 shadow-lg p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up" style="animation-delay:0.07s;">
-                            <div class="text-3xl mb-2"><i class="ph ph-globe"></i></div>
-                            <div class="font-bold text-green-700 mb-1">Fokus Utama</div>
-                            <div class="text-xs text-gray-600 text-center">Pengelolaan Lingkungan Hidup<br>Pembangunan Pertanian Berkelanjutan</div>
+                            <div class="text-2xl md:text-3xl mb-2"><i class="ph ph-globe"></i></div>
+                            <div class="font-bold text-green-700 mb-1 text-sm md:text-base">Fokus Utama</div>
+                            <div class="text-xs md:text-sm text-gray-600 text-center">Pengelolaan Lingkungan Hidup<br>Pembangunan Pertanian Berkelanjutan</div>
                         </div>
                         <div class="rounded-xl bg-white border-2 border-green-200 shadow-lg p-4 flex flex-col items-center transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up" style="animation-delay:0.14s;">
-                            <div class="text-3xl mb-2"><i class="ph ph-target"></i></div>
-                            <div class="font-bold text-green-700 mb-1">Target</div>
-                            <div class="text-xs text-gray-600 text-center">Pembangunan Berkelanjutan<br>Kesejahteraan Masyarakat Papua Barat</div>
+                            <div class="text-2xl md:text-3xl mb-2"><i class="ph ph-target"></i></div>
+                            <div class="font-bold text-green-700 mb-1 text-sm md:text-base">Target</div>
+                            <div class="text-xs md:text-sm text-gray-600 text-center">Pembangunan Berkelanjutan<br>Kesejahteraan Masyarakat Papua Barat</div>
                         </div>
                     </div>
 
                     <!-- Baris 4: Visi & Misi -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div class="rounded-xl bg-green-50 border border-green-200 p-4 shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up" style="animation-delay:0.21s;">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
+                        <div class="rounded-xl bg-green-50 border border-green-200 p-4 shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up text-sm md:text-base" style="animation-delay:0.21s;">
                             <div class="font-bold text-green-800 mb-2">Visi</div>
-                            <div class="text-sm text-gray-700">"Mewujudkan Urusan Pengelolaan Lingkungan Hidup dan Sumber Daya Alam Yang Berkeadilan dan berkelanjutan."</div>
+                            <div>"Mewujudkan Urusan Pengelolaan Lingkungan Hidup dan Sumber Daya Alam Yang Berkeadilan dan berkelanjutan."</div>
                         </div>
-                        <div class="rounded-xl bg-green-50 border border-green-200 p-4 shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up" style="animation-delay:0.28s;">
+                        <div class="rounded-xl bg-green-50 border border-green-200 p-4 shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl animate-fadein-up text-sm md:text-base" style="animation-delay:0.28s;">
                             <div class="font-bold text-green-800 mb-2">Misi</div>
-                            <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                            <ul class="list-disc list-inside space-y-1">
                                 <li>Melaksanakan perumusan kebijakan teknis di bidang lingkungan hidup dan pertanian.</li>
                                 <li>Melakukan koordinasi dan sinkronisasi program lingkungan hidup dan pertanian.</li>
                                 <li>Melaksanakan pembinaan, pengawasan, dan pengendalian terhadap pelaksanaan kebijakan di bidang lingkungan hidup dan pertanian.</li>
@@ -685,18 +685,18 @@
                     </div>
 
                     <!-- Baris 5: Komitmen Kami -->
-                    <div class="rounded-2xl bg-gradient-to-br from-[#16a34a] to-[#047857] text-white flex flex-col md:flex-row items-stretch shadow-lg overflow-hidden animate-fadein-up transform transition duration-300 hover:scale-105 hover:shadow-2xl" style="animation-delay:0.35s;">
-                        <div class="flex-shrink-0 flex flex-col items-center justify-center p-6 md:w-1/4 bg-white/10">
-                            <div class="w-24 h-28 bg-white rounded-lg flex items-center justify-center overflow-hidden mb-2">
+                    <div class="rounded-2xl bg-gradient-to-br from-[#16a34a] to-[#047857] text-white flex flex-col md:flex-row items-stretch shadow-lg overflow-hidden animate-fadein-up transform transition duration-300 hover:scale-105 hover:shadow-2xl text-sm md:text-base" style="animation-delay:0.35s;">
+                        <div class="flex-shrink-0 flex flex-col items-center justify-center p-4 md:p-6 md:w-1/4 bg-white/10">
+                            <div class="w-20 h-24 md:w-24 md:h-28 bg-white rounded-lg flex items-center justify-center overflow-hidden mb-2">
                                 <img src="/images/kadis.png" alt="Foto Kepala Dinas" class="object-cover w-full h-full" onerror="this.style.display='none'">
                                 <span class="text-gray-400 text-xs" style="display:none;">Foto Kepala Dinas</span>
                             </div>
-                            <div class="font-semibold text-white text-base text-center">Reymond R.H Yap, SE., MTP</div>
+                            <div class="font-semibold text-white text-center">Reymond R.H Yap, SE., MTP</div>
                             <div class="text-xs text-white text-center">Kepala Dinas Lingkungan Hidup dan Pertanahan</div>
                         </div>
-                        <div class="flex-1 flex flex-col justify-center p-6">
+                        <div class="flex-1 flex flex-col justify-center p-4 md:p-6">
                             <div class="font-bold text-lg mb-2">Komitmen Kepemimpinan</div>
-                            <div class="text-sm text-white mb-2">Dinas Lingkungan Hidup dan Pertanian Provinsi Papua Barat siap menjadi mitra bagi seluruh elemen masyarakat, akademisi, dunia usaha, dan instansi terkait lainnya dalam mencapai tujuan bersama: mewujudkan Papua Barat yang hijau, lestari, dan sejahtera. Kami berkomitmen untuk terus meningkatkan kualitas layanan, transparansi, akuntabilitas, efektivitas program, dan akuntabilitas kerja demi terwujudnya lingkungan hidup yang bersih, sehat, dan berkelanjutan untuk seluruh masyarakat.</div>
+                            <div class="mb-2">Dinas Lingkungan Hidup dan Pertanian Provinsi Papua Barat siap menjadi mitra bagi seluruh elemen masyarakat, akademisi, dunia usaha, dan instansi terkait lainnya dalam mencapai tujuan bersama: mewujudkan Papua Barat yang hijau, lestari, dan sejahtera. Kami berkomitmen untuk terus meningkatkan kualitas layanan, transparansi, akuntabilitas, efektivitas program, dan akuntabilitas kerja demi terwujudnya lingkungan hidup yang bersih, sehat, dan berkelanjutan untuk seluruh masyarakat.</div>
                         </div>
                     </div>
                 </div>
