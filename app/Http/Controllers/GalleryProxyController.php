@@ -26,38 +26,39 @@ class GalleryProxyController extends Controller
             $html = $response->body();
             
             // Create DOM document
-            $dom = new DOMDocument();
+            $dom = new \DOMDocument();
             @$dom->loadHTML($html, LIBXML_NOERROR | LIBXML_NOWARNING);
             
-            $xpath = new DOMXPath($dom);
+            $xpath = new \DOMXPath($dom);
             
             $items = [];
+            $unique = [];
             
-            // Find all article elements that contain gallery items
-            $articles = $xpath->query('//article[contains(@class, "post")]');
+            // Cari semua elemen galeri
+            $cards = $xpath->query('//div[contains(@class, "card_custom")]');
             
-            foreach ($articles as $article) {
-                // Get the image element within the article
-                $imgElement = $xpath->query('.//img[contains(@class, "img-thumbnail")]', $article)->item(0);
-                
-                if ($imgElement) {
-                    $src = $imgElement->getAttribute('src');
-                    $alt = $imgElement->getAttribute('alt') ?: '';
-                    
-                    // Get the title from the h2 element within the same article
-                    $titleElement = $xpath->query('.//h2//a', $article)->item(0);
-                    $title = $titleElement ? trim($titleElement->textContent) : $alt;
-                    
-                    // Ensure URL is absolute
-                    if ($src && !preg_match('#^https?://#', $src)) {
-                        $src = 'https://dlht.papuabaratprov.go.id' . $src;
-                    }
-                    
-                    if ($src) {
+            foreach ($cards as $card) {
+                // Ambil gambar
+                $img = $xpath->query('.//img', $card)->item(0);
+                $src = $img ? $img->getAttribute('src') : null;
+
+                // Ambil judul
+                $titleElement = $xpath->query('.//div[contains(@class, "card_custom-body")]/h4/a', $card)->item(0);
+                $title = $titleElement ? trim($titleElement->textContent) : '';
+
+                // Ambil link detail (opsional)
+                $link = $titleElement ? $titleElement->getAttribute('href') : '';
+
+                // Filter: hanya ambil jika ada gambar dan judul, dan tidak duplikat
+                if ($src && $title) {
+                    $key = md5($src . $title);
+                    if (!isset($unique[$key])) {
                         $items[] = [
                             'src' => $src,
-                            'title' => $title ?: 'Galeri DLHP Papua Barat',
+                            'title' => $title,
+                            'link' => $link,
                         ];
+                        $unique[$key] = true;
                     }
                 }
             }
